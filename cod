@@ -1,0 +1,84 @@
+const int ENA = 6;
+const int IN1 = 7;
+const int IN2 = 8;
+const int IN3 = 9;
+const int IN4 = 10;
+const int ENB = 11;
+
+const int PWM = 142;
+
+const int TEMPO_LADO = 1600;
+const int TEMPO_GIRO_90 = 600;
+const int PAUSA = 200;
+
+bool percursoConcluido = false;
+
+void setup() {
+  pinMode(ENA, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+  pinMode(IN3, OUTPUT);
+  pinMode(IN4, OUTPUT);
+  pinMode(ENB, OUTPUT);
+
+  parar();
+  delay(2000);
+}
+
+void loop() {
+  if (!percursoConcluido) {
+    formarQuadrado();
+    percursoConcluido = true;
+  }
+}
+
+void moverFrente(unsigned long tempo) {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+
+  analogWrite(ENA, PWM);
+  analogWrite(ENB, PWM);
+
+  delay(tempo);
+  parar();
+  delay(PAUSA);
+}
+
+void girarDireita(unsigned long tempoDoGiro) {
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, HIGH);
+  digitalWrite(IN4, LOW);
+
+  analogWrite(ENA, PWM);
+  analogWrite(ENB, PWM);
+
+  delay(tempoDoGiro);
+  parar();
+  delay(PAUSA);
+}
+
+void parar() {
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, LOW);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, LOW);
+
+  analogWrite(ENA, 0);
+  analogWrite(ENB, 0);
+}
+
+void formarQuadrado() {
+  moverFrente(TEMPO_LADO);
+  girarDireita(TEMPO_GIRO_90);
+
+  moverFrente(TEMPO_LADO);
+  girarDireita(TEMPO_GIRO_90);
+
+  moverFrente(TEMPO_LADO);
+  girarDireita(TEMPO_GIRO_90);
+
+  moverFrente(TEMPO_LADO);
+}
